@@ -1,0 +1,34 @@
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["metrics"]
+    binaryTargets   = ["linux-musl-openssl-3.0.x", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id          Int       @unique @default(autoincrement())
+    name        String
+    email       String    @unique
+    phone       String    @unique
+    position_id Int
+    photo       String
+    position    Positions @relation(fields: [position_id], references: [id])
+    created_at  DateTime  @default(now())
+    updated_at  DateTime  @updatedAt
+
+    @@map(name: "users")
+}
+
+model Positions {
+    id         Int      @unique @default(autoincrement())
+    name       String   @unique
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+    user       User[]
+
+    @@map(name: "positions")
+}

@@ -1,0 +1,11 @@
+FROM node:20-alpine AS build-stage
+
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+
+FROM node:20-alpine
+
+WORKDIR /usr/src/app
+COPY --from=build-stage /usr/src/app/node_modules /usr/src/app/node_modules
+COPY . .

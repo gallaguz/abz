@@ -1,0 +1,18 @@
+export const APP_KEYS = {
+    Application: Symbol.for('Application'),
+    LoggerService: Symbol.for('LoggerService'),
+    ConfigService: Symbol.for('ConfigService'),
+    ExceptionFilter: Symbol.for('ExceptionFilter'),
+    DatabaseService: Symbol.for('DatabaseService'),
+    UserController: Symbol.for('UserController'),
+    UsersService: Symbol.for('UsersService'),
+    UserRepository: Symbol.for('UserRepository'),
+    PasswordService: Symbol.for('PasswordService'),
+    PasswordRepository: Symbol.for('PasswordRepository'),
+    TokensController: Symbol.for('TokensController'),
+    TokensService: Symbol.for('TokensService'),
+    FilesService: Symbol.for('FilesService'),
+    CacheService: Symbol.for('CacheService'),
+    PositionsService: Symbol.for('PositionsService'),
+    PositionsController: Symbol.for('PositionsController'),
+};

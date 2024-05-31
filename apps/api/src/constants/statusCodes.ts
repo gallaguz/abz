@@ -1,0 +1,26 @@
+export enum SUCCESS_CODES {
+    OK = 200,
+    CREATED = 201,
+    NOT_MODIFIED = 304,
+}
+
+export enum CLIENT_ERROR_CODES {
+    BAD_REQUEST = 400,
+    UNAUTHORIZED = 401,
+    NOT_FOUND = 404,
+    CONFLICT = 409,
+    UNPROCESSABLE_ENTITY = 422,
+}
+
+export type TStatusCodes = SUCCESS_CODES | CLIENT_ERROR_CODES
+
+export const STATUS_CODES_MESSAGES_MAP: Record<TStatusCodes, string> = {
+    [SUCCESS_CODES.OK]: 'OK',
+    [SUCCESS_CODES.CREATED]: 'Created',
+    [SUCCESS_CODES.NOT_MODIFIED]: 'Not Modified',
+    [CLIENT_ERROR_CODES.BAD_REQUEST]: 'Bad Request',
+    [CLIENT_ERROR_CODES.UNAUTHORIZED]: 'Unauthorized',
+    [CLIENT_ERROR_CODES.NOT_FOUND]: 'Not Found',
+    [CLIENT_ERROR_CODES.CONFLICT]: 'Conflict',
+    [CLIENT_ERROR_CODES.UNPROCESSABLE_ENTITY]: 'Unprocessable Entity',
+};
