@@ -1,0 +1,5 @@
+/.idea/
+node_nodules
+.vagrant
+*.env
+dist
