@@ -1,6 +1,5 @@
 import 'reflect-metadata';
-
-import process from 'process';
+import 'dotenv/config';
 
 import { Container } from 'inversify';
 
@@ -20,16 +19,10 @@ async function bootstrap(): Promise<void> {
 
     try {
         await app.init();
-
-        process.on('SIGTERM', () => {
-            app.close();
-        });
-    } catch (error: unknown) {
+    } catch (error) {
         if (error instanceof Error) {
             loggerService.error(error);
         }
-    } finally {
-        loggerService.debug(`[ PID ] ${process.pid}`);
     }
 }
 

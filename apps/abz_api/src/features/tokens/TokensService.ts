@@ -32,19 +32,19 @@ export class TokensService implements ITokensService {
         @inject(APP_KEYS.CacheService) private cacheService: CacheService,
     ) {
         this.JWTCachePrefix = this.configService.get(
-            ENV_VARS.JWT_CACHE_PREFIX,
+            ENV_VARS.API_JWT_CACHE_PREFIX,
         );
         this.JWTCacheTTL = Number(this.configService.get(
-            ENV_VARS.JWT_CACHE_TTL,
+            ENV_VARS.API_JWT_CACHE_TTL,
         ));
         this.accessTokenSecret = this.configService.get(
-            ENV_VARS.JWT_ACCESS_SECRET,
+            ENV_VARS.API_JWT_ACCESS_SECRET,
         );
         this.accessTokenExpiresIn = this.configService.get(
-            ENV_VARS.JWT_ACCESS_EXPIRES_IN,
+            ENV_VARS.API_JWT_ACCESS_EXPIRES_IN,
         );
         this.algorithm = <Algorithm>(
-            this.configService.get(ENV_VARS.JWT_ALGORITHM)
+            this.configService.get(ENV_VARS.API_JWT_ALGORITHM)
         );
     }
 

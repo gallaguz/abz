@@ -40,7 +40,7 @@ export class UserEntity implements IUserEntityInterface {
         this.photo = `${configService.get(
             ENV_VARS.API_PROTOCOL,
         )}://${configService.get(ENV_VARS.API_HOST)}/${configService.get(
-            ENV_VARS.IMAGES_URL_PATH,
+            ENV_VARS.API_IMAGES_URL_PATH,
         )}/${photo}`;
         this.position = position.name;
         this.position_id = String(position_id);

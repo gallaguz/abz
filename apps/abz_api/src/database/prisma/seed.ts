@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const wait = (ms: number): Promise<void> => new Promise(r => setTimeout(r, ms));
 
-fakerUK.seed(Number(process.env.FAKER_SEED_FAKTOR) || 42);
+fakerUK.seed(Number(process.env.API_FAKER_SEED_FACTOR) || 42);
 
 const prisma = new PrismaClient();
 
@@ -21,9 +21,9 @@ const POSITIONS = [
     { name: 'Designer' },
 ];
 
-const USERS_COUNT = Number(process.env.SEED_USERS_COUNT);
+const USERS_COUNT = Number(process.env.API_SEED_USERS_COUNT);
 
-const uploadDir = process.env.UPLOAD_FOLDER_PATH;
+const uploadDir = process.env.API_UPLOAD_FOLDER_PATH;
 
 function getRandomNumber(min: number, max: number): number {
     return Math.random() * (max - min) + min;
@@ -95,7 +95,7 @@ async function generateFace(number: number): Promise<string> {
     context.textBaseline = 'middle';
     context.fillText(number.toString(), width / 2, height / 2);
 
-    if (!uploadDir) throw new Error('UPLOAD_FOLDER_PATH not set');
+    if (!uploadDir) throw new Error('API_UPLOAD_FOLDER_PATH not set');
 
     // Save image
     const filename = `${uuidv4()}.jpeg`;

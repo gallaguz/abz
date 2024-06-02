@@ -50,7 +50,7 @@ export class UsersController
         super(loggerService, '/users');
 
         this.pageCountRows = Number(
-            this.configService.get(ENV_VARS.DEFAULT_PAGE_COUNT_ROWS),
+            this.configService.get(ENV_VARS.API_PAGE_COUNT_ROWS),
         );
 
         this.bindRoutes([

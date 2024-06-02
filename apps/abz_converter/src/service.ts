@@ -39,10 +39,10 @@ export class ImageService {
 
   private getDefaults(): TDefaults {
     return {
-      height: Number(process.env.DEFAULT_PHOTO_HEIGHT),
-      width: Number(process.env.DEFAULT_PHOTO_WIDTH),
-      quality: Number(process.env.DEFAULT_PHOTO_QUALITY),
-      format: process.env.DEFAULT_PHOTO_FORMAT,
+      height: Number(process.env.CONVERTER_DEFAULT_PHOTO_HEIGHT),
+      width: Number(process.env.CONVERTER_DEFAULT_PHOTO_WIDTH),
+      quality: Number(process.env.CONVERTER_DEFAULT_PHOTO_QUALITY),
+      format: process.env.CONVERTER_DEFAULT_PHOTO_FORMAT,
     };
   }
 

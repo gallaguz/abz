@@ -5,13 +5,13 @@ import { inject, injectable } from 'inversify';
 
 import { APP_KEYS } from './appKeys';
 import { IConfigService, ILogger } from '../common';
-import { APP_ENV, ENV_VARS } from '../constants';
+import { API_APP_ENV, ENV_VARS } from '../constants';
 
 dotenv.config();
 
 @injectable()
 export class ConfigService implements IConfigService {
-    public readonly appEnv: APP_ENV;
+    public readonly appEnv: API_APP_ENV;
 
     constructor(@inject(APP_KEYS.LoggerService) private logger: ILogger) {
         this.appEnv = this.init();
@@ -19,16 +19,16 @@ export class ConfigService implements IConfigService {
         this.logger.info(`[ ${this.constructor.name} ] env loaded`);
     }
 
-    private init(): APP_ENV {
-        const appEnv: string | undefined = process.env[ENV_VARS.APP_ENV];
+    private init(): API_APP_ENV {
+        const appEnv: string | undefined = process.env[ENV_VARS.API_APP_ENV];
 
-        const validEnvs = new Set<string>(Object.values(APP_ENV));
+        const validEnvs = new Set<string>(Object.values(API_APP_ENV));
 
         if (!appEnv || !validEnvs.has(appEnv)) {
-            throw new Error(`Invalid APP_ENV "${appEnv}"`);
+            throw new Error(`Invalid API_APP_ENV "${appEnv}"`);
         }
 
-        return appEnv as APP_ENV;
+        return appEnv as API_APP_ENV;
     }
 
     public get(key: ENV_VARS): string {

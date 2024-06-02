@@ -47,7 +47,7 @@ export class App {
 
     useMiddleware(): void {
         const maxPhotoSize =
-            `${(Number(this.configService.get(ENV_VARS.MAX_PHOTO_SIZE)) * 1.4) / (1024 * 1024)}mb` ||
+            `${(Number(this.configService.get(ENV_VARS.API_MAX_PHOTO_SIZE)) * 1.4) / (1024 * 1024)}mb` ||
             '6mb';
         this.app.use(json({ limit: maxPhotoSize }));
         this.app.use(urlencoded({ extended: true, limit: maxPhotoSize }));
@@ -82,50 +82,24 @@ export class App {
     }
 
     public async init(): Promise<void> {
-        if (!this.isTerminated()) {
-            this.server = this.app.listen(this.port);
+        this.server = this.app.listen(this.port);
 
-            await this.databaseService.connect();
-            await this.cacheService.connect();
+        await this.databaseService.connect();
+        await this.cacheService.connect();
 
-            this.useMiddleware();
-            this.useRoutes();
+        this.useMiddleware();
+        this.useRoutes();
 
-            this.loggerService.info(
-                `[ ${this.constructor.name} ] Listening on port: ${this.port}`,
-            );
-            this.loggerService.info(
-                `[ ${
-                    this.constructor.name
-                } ] DATABASE_URL: ${this.configService.get(
-                    ENV_VARS.DATABASE_URL,
-                )}`,
-            );
-        } else {
-            process.exit(0);
-        }
-    }
-
-    public isTerminated(): boolean {
-        return parseInt(this.configService.get(ENV_VARS.IS_TERMINATED)) === 1;
-    }
-
-    public async close(): Promise<void> {
-        process.env.IS_TERMINATED = String(1);
-        this.loggerService.warning(
-            'Shutting down the application gracefully...',
+        this.loggerService.info(
+            `[ ${this.constructor.name} ] Listening on port: ${this.port}`,
         );
-        await this.sleep(30_000);
-        this.server.close();
-        this.loggerService.warning('Server stopped. Application terminated.');
-        process.exit(0);
-    }
-
-    public sleep(milliseconds: number): Promise<void> {
-        return new Promise((resolve): void => {
-            setTimeout((): void => {
-                resolve();
-            }, milliseconds);
-        });
+        // TODO REMOVE
+        // this.loggerService.info(
+        //     `[ ${
+        //         this.constructor.name
+        //     } ] DATABASE_URL: ${this.configService.get(
+        //         ENV_VARS.DATABASE_URL,
+        //     )}`,
+        // );
     }
 }

@@ -26,7 +26,7 @@ export class UsersService implements IUsersService {
         @inject(APP_KEYS.DatabaseService) private databaseService: DatabaseService,
     ) {
         this.hashName = 'ABZ';
-        this.ttl = Number(this.configService.get(ENV_VARS.REDIS_CACHE_TTL)) || 3600;
+        this.ttl = Number(this.configService.get(ENV_VARS.API_REDIS_CACHE_TTL)) || 3600;
     }
 
     async all(

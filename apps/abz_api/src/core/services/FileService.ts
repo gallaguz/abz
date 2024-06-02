@@ -17,12 +17,15 @@ export class FilesService {
         @inject(APP_KEYS.LoggerService) private loggerService: ILogger,
         @inject(APP_KEYS.ConfigService) private configService: IConfigService,
     ) {
-        this.uploadFolder = this.configService.get(ENV_VARS.UPLOAD_FOLDER_PATH);
+        this.loggerService.debug(this.configService.get(
+            ENV_VARS.API_CONVERTER_URL,
+        ))
+        this.uploadFolder = this.configService.get(ENV_VARS.API_UPLOAD_FOLDER_PATH);
         this.converterUPL = `http://${this.configService.get(
-            ENV_VARS.CONVERTER_URL,
+            ENV_VARS.API_CONVERTER_URL,
         )}`;
         this.imageFormat = this.configService.get(
-            ENV_VARS.DEFAULT_PHOTO_FORMAT,
+            ENV_VARS.API_DEFAULT_PHOTO_FORMAT,
         );
     }
 

@@ -24,7 +24,7 @@ export class PhotoValidateMiddleware
     ) {
         super(loggerService, classToValidate, VALIDATION_TYPE.FILE);
         this.mxPhotoSize = Number(
-            this.configService.get(ENV_VARS.MAX_PHOTO_SIZE),
+            this.configService.get(ENV_VARS.API_MAX_PHOTO_SIZE),
         );
     }
 

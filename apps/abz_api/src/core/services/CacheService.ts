@@ -16,15 +16,14 @@ export class CacheService {
     ) {
 
         this.client = new Redis({
-            port: Number(this.configService.get(ENV_VARS.REDIS_PORT)),
-            host: this.configService.get(ENV_VARS.REDIS_HOST),
-            db: Number(this.configService.get(ENV_VARS.REDIS_DB)),
+            port: Number(this.configService.get(ENV_VARS.API_REDIS_PORT)),
+            host: this.configService.get(ENV_VARS.API_REDIS_HOST),
+            db: Number(this.configService.get(ENV_VARS.API_REDIS_DB)),
         });
     }
 
     async connect(): Promise<void> {
         try {
-            await this.client.connect();
             this.loggerService.info(`[ Redis ] Connected`);
 
             this.client.on('error', (error) => {

@@ -7,7 +7,7 @@
         "seed": "npx ts-node src/database/prisma/seed.ts"
     },
     "scripts": {
-        "start": "node ./dist/main.js",
+        "start": "node -r dotenv/config ./dist/main.js",
         "build": "tsc",
         "seed:dev": "npx ts-node src/database/prisma/seed.ts",
         "seed:deploy": "npx prisma db seed",
@@ -23,7 +23,7 @@
         "body-parser": "1.20.2",
         "class-transformer": "0.5.1",
         "class-validator": "0.14.1",
-        "dotenv": "16.4.5",
+        "dotenv": "^16.4.5",
         "express": "4.19.2",
         "fs-extra": "11.2.0",
         "inversify": "6.0.2",

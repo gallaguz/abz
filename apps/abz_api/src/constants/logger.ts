@@ -1,6 +1,6 @@
 import * as winston from 'winston';
 
-export const LOG_LEVELS = {
+export const API_LOG_LEVELS = {
     CRITICAL: 0,
     ERROR: 1,
     WARNING: 2,
@@ -11,15 +11,15 @@ export const LOG_LEVELS = {
     TRACE: 7,
 };
 
-export const LOG_LEVELS_MAP = {
-    [LOG_LEVELS.CRITICAL]: 'CRITICAL',
-    [LOG_LEVELS.ERROR]: 'ERROR',
-    [LOG_LEVELS.WARNING]: 'WARNING',
-    [LOG_LEVELS.INFO]: 'INFO',
-    [LOG_LEVELS.PROMPT]: 'PROMPT',
-    [LOG_LEVELS.DATA]: 'DATA',
-    [LOG_LEVELS.DEBUG]: 'DEBUG',
-    [LOG_LEVELS.TRACE]: 'TRACE',
+export const API_LOG_LEVELS_MAP = {
+    [API_LOG_LEVELS.CRITICAL]: 'CRITICAL',
+    [API_LOG_LEVELS.ERROR]: 'ERROR',
+    [API_LOG_LEVELS.WARNING]: 'WARNING',
+    [API_LOG_LEVELS.INFO]: 'INFO',
+    [API_LOG_LEVELS.PROMPT]: 'PROMPT',
+    [API_LOG_LEVELS.DATA]: 'DATA',
+    [API_LOG_LEVELS.DEBUG]: 'DEBUG',
+    [API_LOG_LEVELS.TRACE]: 'TRACE',
 };
 
 /**
@@ -29,13 +29,13 @@ export const LOG_LEVELS_MAP = {
  *
  * Background colors: blackBG, redBG, greenBG, yellowBG, blueBG magentaBG, cyanBG, whiteBG
  */
-export const LOG_COLOURS: winston.config.AbstractConfigSetColors = {
-    [LOG_LEVELS_MAP[LOG_LEVELS.CRITICAL]]: 'bold red blackBG',
-    [LOG_LEVELS_MAP[LOG_LEVELS.ERROR]]: 'red blackBG',
-    [LOG_LEVELS_MAP[LOG_LEVELS.WARNING]]: 'underline yellow',
-    [LOG_LEVELS_MAP[LOG_LEVELS.INFO]]: 'white',
-    [LOG_LEVELS_MAP[LOG_LEVELS.PROMPT]]: 'cyan',
-    [LOG_LEVELS_MAP[LOG_LEVELS.DATA]]: 'magenta',
-    [LOG_LEVELS_MAP[LOG_LEVELS.DEBUG]]: 'green',
-    [LOG_LEVELS_MAP[LOG_LEVELS.TRACE]]: 'blue',
+export const API_LOG_COLOURS: winston.config.AbstractConfigSetColors = {
+    [API_LOG_LEVELS_MAP[API_LOG_LEVELS.CRITICAL]]: 'bold red blackBG',
+    [API_LOG_LEVELS_MAP[API_LOG_LEVELS.ERROR]]: 'red blackBG',
+    [API_LOG_LEVELS_MAP[API_LOG_LEVELS.WARNING]]: 'underline yellow',
+    [API_LOG_LEVELS_MAP[API_LOG_LEVELS.INFO]]: 'white',
+    [API_LOG_LEVELS_MAP[API_LOG_LEVELS.PROMPT]]: 'cyan',
+    [API_LOG_LEVELS_MAP[API_LOG_LEVELS.DATA]]: 'magenta',
+    [API_LOG_LEVELS_MAP[API_LOG_LEVELS.DEBUG]]: 'green',
+    [API_LOG_LEVELS_MAP[API_LOG_LEVELS.TRACE]]: 'blue',
 };
