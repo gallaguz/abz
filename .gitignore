@@ -1,8 +1,9 @@
-.idea
-.vscode
-node_nodules
-.vagrant
-*.env.*
-dist
-tmp
+**/.idea/
+**/.vscode/
+**/node_modules/
+**/.vagrant/
+**/.env*
+**/dist/
+**/tmp/
 *.log
+**/.pass
