@@ -114,6 +114,7 @@ export class UsersController
             usersEntities = result.usersEntities;
 
         } catch (error) {
+            console.error(error);
             if (error instanceof RootHttpError) {
                 this.loggerService.error(error.message);
                 return this.fail(res, error.statusCode, {
@@ -173,6 +174,7 @@ export class UsersController
 
             userEntity = result.userEntity;
         } catch (error) {
+            console.error(error);
             if (error instanceof RootHttpError) {
                 this.loggerService.error(error.message);
                 return this.fail(res, error.statusCode, {

@@ -21,6 +21,7 @@ export class AuthMiddleware implements IMiddleware {
                 if (!valid) return next(new UnauthorizedError());
             }
         } catch (error) {
+            console.error(error);
             if (error instanceof Error) this.loggerService.error(error.message);
         }
         next();

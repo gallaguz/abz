@@ -19,6 +19,7 @@ export class DatabaseService {
             await this.client.$connect();
             this.loggerService.info(`[ DB ] Connected`);
         } catch (error) {
+            console.error(error);
             if (error instanceof Error) this.loggerService.error(error.message);
         }
     }

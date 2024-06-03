@@ -13,6 +13,7 @@ import { ENV_VARS, PAGE_NOT_FOUND, USER_NOT_FOUND } from '../../constants';
 import { BadRequestError, NotFoundError } from '../../core/errors';
 import { CacheService } from '../../core/services/CacheService';
 import { DatabaseService } from '../../core/services/DatabaseService';
+import { LoggerService } from '../../core/services/LoggerService';
 
 @injectable()
 export class UsersService implements IUsersService {
@@ -60,6 +61,7 @@ export class UsersService implements IUsersService {
                 },
             });
         } catch (error) {
+            console.error(error);
             if (error instanceof Error) this.loggerService.error(error);
 
             throw new BadRequestError();

@@ -48,6 +48,7 @@ export abstract class RootValidateMiddleware {
                 }
             });
         } catch (error) {
+            console.error(error);
             if (error instanceof Error) this.loggerService.error(error);
             next(
                 new UnprocessableEntityError({

@@ -19,7 +19,7 @@ export class TokenEntity implements ITokenEntity {
             };
             return sign(payload, this._secret, options);
         } catch (error) {
-            // TODO
+            console.error(error);
             throw new Error('Sign token error');
         }
     }

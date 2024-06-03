@@ -30,6 +30,7 @@ export class CacheService {
                 this.loggerService.error(error.message);
             });
         } catch (error) {
+            console.error(error);
             if (error instanceof Error) this.loggerService.error(error.message);
         }
     }
@@ -85,6 +86,7 @@ export class CacheService {
                     reject(error);
                 });
             } catch (error) {
+                console.error(error);
                 if (error instanceof Error) {
                     this.loggerService.error(`[ Redis ] Exception: ${error.message}`);
                     reject(error);

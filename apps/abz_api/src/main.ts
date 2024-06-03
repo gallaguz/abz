@@ -20,6 +20,7 @@ async function bootstrap(): Promise<void> {
     try {
         await app.init();
     } catch (error) {
+        console.error(error);
         if (error instanceof Error) {
             loggerService.error(error);
         }
