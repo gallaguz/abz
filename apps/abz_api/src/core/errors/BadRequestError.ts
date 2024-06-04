@@ -10,6 +10,7 @@ export class BadRequestError extends RootHttpError {
                 STATUS_CODES_MESSAGES_MAP[CLIENT_ERROR_CODES.BAD_REQUEST],
             context: input?.context,
             originalError: input?.originalError,
+            fails: input?.fails,
         });
     }
 }

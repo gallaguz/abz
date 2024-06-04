@@ -10,6 +10,7 @@ export class NotFoundError extends RootHttpError {
                 STATUS_CODES_MESSAGES_MAP[CLIENT_ERROR_CODES.NOT_FOUND],
             context: input?.context,
             originalError: input?.originalError,
+            fails: input?.fails,
         });
     }
 }
