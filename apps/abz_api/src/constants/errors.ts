@@ -8,6 +8,7 @@ export const WRONG_PHOTO_SIZE = 'The photo may not be greater than 5 Mbytes.';
 export const VALIDATION_FAILED = 'Validation failed';
 
 export const USER_EXIST = 'User with this phone or email already exist';
+export const USER_NOT_EXIST = 'The user with the requestedid does not exist';
 export const TOKEN_EXPIRED = 'The token expired.';
 
 export const WRONG_COUNT = 'The count must be an integer.';
