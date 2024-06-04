@@ -1,4 +1,3 @@
-// src/components/UserDetails.vue
 <template>
   <div class="user-detail" v-if="user">
     <h2>User Details</h2>

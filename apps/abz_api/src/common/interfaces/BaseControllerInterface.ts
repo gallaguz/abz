@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 
 import { IMiddleware } from './MiddlewareInterface';
-import { TStatusCodes } from '../../constants/statusCodes';
+import { TStatusCodes } from '../../constants';
 
 type THttpMethods = 'get' | 'post' | 'delete' | 'patch' | 'put' | 'options';
 

@@ -1,4 +1,3 @@
-// src/components/UserForm.vue
 <template>
   <div class="user-form">
     <h2>Register New User</h2>

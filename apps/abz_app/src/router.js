@@ -1,5 +1,3 @@
-// src/router.js
-
 import { createRouter, createWebHistory } from 'vue-router';
 import UserList from './components/UserList.vue';
 import UserForm from './components/UserForm.vue';

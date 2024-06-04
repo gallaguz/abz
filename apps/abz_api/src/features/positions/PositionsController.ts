@@ -2,14 +2,13 @@ import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 
 import { PositionsService } from './PositionsService';
-import { BaseController, ExpressReturnType, IConfigService, ILogger, IPositionsController } from '../../common';
+import { BaseController, ExpressReturnType, ILogger, IPositionsController } from '../../common';
 import { APP_KEYS } from '../../config/appKeys';
 import { SUCCESS_CODES } from '../../constants';
 
 @injectable()
 export class PositionsController extends BaseController implements IPositionsController{
     constructor(
-        @inject(APP_KEYS.ConfigService) private configService: IConfigService,
         @inject(APP_KEYS.LoggerService) loggerService: ILogger,
         @inject(APP_KEYS.PositionsService) private positionsService: PositionsService,
     ) {

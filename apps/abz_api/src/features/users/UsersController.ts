@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 
-import { UserEntity } from './UserEntity';
 import {
     BaseController,
     ExpressReturnType,
@@ -17,18 +16,16 @@ import {
     SOMETHING_GOES_WRONG,
     SUCCESS_CODES,
     USER_ADDED,
-    USER_NOT_FOUND,
 } from '../../constants';
 import { UsersAll } from '../../contracts/users/all';
 import { UsersById } from '../../contracts/users/byId';
 import { UsersRegister } from '../../contracts/users/register';
-import { NotFoundError, NotModifiedError, RootHttpError } from '../../core/errors';
+import { RootHttpError } from '../../core/errors';
 import { AuthMiddleware } from '../../core/middlewares/auth/AuthMiddleware';
 import { BodyValidateMiddleware } from '../../core/middlewares/validation/BodyValidateMiddleware';
 import { ParamsValidateMiddleware } from '../../core/middlewares/validation/ParamsValidateMiddleware';
 import { PhotoValidateMiddleware } from '../../core/middlewares/validation/PhotoValidateMiddleware';
 import { QueryValidateMiddleware } from '../../core/middlewares/validation/QueryValidateMiddleware';
-import { CacheService } from '../../core/services/CacheService';
 import { FilesService } from '../../core/services/FileService';
 import { TokensService } from '../tokens/TokensService';
 
@@ -45,7 +42,6 @@ export class UsersController
         @inject(APP_KEYS.UsersService) private userService: IUsersService,
         @inject(APP_KEYS.FilesService) private filesService: FilesService,
         @inject(APP_KEYS.TokensService) private tokensService: TokensService,
-        @inject(APP_KEYS.CacheService) private cacheService: CacheService,
     ) {
         super(loggerService, '/users');
 

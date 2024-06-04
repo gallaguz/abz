@@ -9,11 +9,10 @@ import {
     TUserWithPosition,
 } from '../../common';
 import { APP_KEYS } from '../../config/appKeys';
-import { ENV_VARS, PAGE_NOT_FOUND, USER_NOT_FOUND } from '../../constants';
-import { BadRequestError, NotFoundError } from '../../core/errors';
+import { ENV_VARS, PAGE_NOT_FOUND, SOMETHING_GOES_WRONG, USER_EXIST, USER_NOT_FOUND } from '../../constants';
+import { BadRequestError, ConflictError, NotFoundError, UnprocessableEntityError } from '../../core/errors';
 import { CacheService } from '../../core/services/CacheService';
 import { DatabaseService } from '../../core/services/DatabaseService';
-import { LoggerService } from '../../core/services/LoggerService';
 
 @injectable()
 export class UsersService implements IUsersService {
@@ -90,13 +89,22 @@ export class UsersService implements IUsersService {
     }
 
     async create(data: Prisma.UserCreateArgs): Promise<User> {
+        try {
+            const user = await this.databaseService.client.user.create(data);
+            if (user) {
+                await this.cacheService.removeByMatch(`${this.hashName}:all:*`);
+            }
 
-        const user = await this.databaseService.client.user.create(data);
-        if (user) {
-            await this.cacheService.removeByMatch(`${this.hashName}:all:*`);
+            return user;
+        } catch (error) {
+            if (error instanceof Error) {
+                this.loggerService.error(error);
+                if (error.message.includes('Unique constraint failed')) {
+                    throw new ConflictError({ message: USER_EXIST });
+                }
+            }
+            throw new UnprocessableEntityError({message: SOMETHING_GOES_WRONG });
         }
-
-        return user;
     }
 
     async getById({ userId, path }: { userId: User['id'], path: string }): Promise<{ userEntity?: UserEntity} > {
