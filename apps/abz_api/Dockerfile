@@ -14,6 +14,4 @@ RUN npm install --omit=dev --no-cache
 COPY --from=build-stage /usr/src/app/node_modules/.prisma/client ./node_modules/.prisma/client
 COPY --from=build-stage /usr/src/app/dist ./dist
 
-#USER node
-
 CMD npm run start
