@@ -88,13 +88,6 @@ async function generateFace(number: number): Promise<string> {
     );
     context.stroke();
 
-    // Draw index text
-    context.fillStyle = '#000000';
-    context.font = '10px Arial'; // Smaller font size
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.fillText(number.toString(), width / 2, height / 2);
-
     if (!uploadDir) throw new Error('API_UPLOAD_FOLDER_PATH not set');
 
     // Save image
