@@ -134,11 +134,13 @@ export class UsersController
         const nextPage = currentPage + 1 > totalPages ? null : currentPage + 1;
         const prevPage = currentPage - 1 < 1 ? null : currentPage - 1;
 
+        const apiProtocol = this.configService.get(ENV_VARS.API_PROTOCOL);
+        const apiDomainName = this.configService.get(ENV_VARS.API_HOST);
         const nextUrl = nextPage
-            ? `${this.configService.get(ENV_VARS.API_PROTOCOL)}://${this.configService.get(ENV_VARS.API_HOST)}/api/v1${this.path}?page=${nextPage}&count=${take}`
+            ? `${apiProtocol}://${apiDomainName}/api/v1${this.path}?page=${nextPage}&count=${take}`
             : null;
         const prevUrl = prevPage
-            ? `${req.protocol}://${req.hostname}/api/v1${this.path}?page=${prevPage}&count=${take}`
+            ? `${apiProtocol}://${apiDomainName}/api/v1${this.path}?page=${prevPage}&count=${take}`
             : null;
 
         const body = {
