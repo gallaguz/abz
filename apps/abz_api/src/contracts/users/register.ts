@@ -42,7 +42,7 @@ export namespace UsersRegister {
 
     export class DTO {
         @MinLength(2, { message: SHORT_NAME })
-        @MaxLength(128, { message: LONG_NAME })
+        @MaxLength(60, { message: LONG_NAME })
         @IsString({ message: WRONG_NAME })
         name: string;
 
