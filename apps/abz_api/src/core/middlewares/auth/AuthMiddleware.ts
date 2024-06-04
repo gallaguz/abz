@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { ILogger, IMiddleware, ITokensService } from '../../../common';
+import { TOKEN_EXPIRED } from '../../../constants';
 import { UnauthorizedError } from '../../errors';
 
 export class AuthMiddleware implements IMiddleware {
@@ -18,7 +19,7 @@ export class AuthMiddleware implements IMiddleware {
         try {
             if (req.headers.token && typeof req.headers.token === 'string') {
                 const valid = await this.tokenService.verifyToken(req.headers.token)
-                if (!valid) return next(new UnauthorizedError());
+                if (!valid) return next(new UnauthorizedError({ message: TOKEN_EXPIRED }));
             }
         } catch (error) {
             console.error(error);
