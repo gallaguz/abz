@@ -4,11 +4,12 @@ import { NextFunction, Request, Response } from 'express';
 
 import { ILogger } from '../../../common';
 import {
-    SOMETHING_GOES_WRONG,
+    SOMETHING_GOES_WRONG, USER_NOT_EXIST,
     VALIDATION_FAILED,
     VALIDATION_TYPE,
 } from '../../../constants';
-import { UnprocessableEntityError } from '../../errors';
+import { UsersById } from '../../../contracts/users/byId';
+import { BadRequestError, UnprocessableEntityError } from '../../errors';
 
 export abstract class RootValidateMiddleware {
     protected constructor(
@@ -27,6 +28,7 @@ export abstract class RootValidateMiddleware {
             req[this.validationType],
         );
 
+
         try {
             validate(instance).then((errors) => {
                 if (errors.length > 0) {
@@ -35,20 +37,28 @@ export abstract class RootValidateMiddleware {
 
                     this.loggerService.debug(errors.toString());
 
-                    next(
-                        new UnprocessableEntityError({
-                            message: VALIDATION_FAILED,
+                    if (instance instanceof UsersById.DTO) {
+                        next(new BadRequestError({
+                            message: USER_NOT_EXIST,
                             fails: errorMessages,
                             originalError: errors,
-                        }),
-                    );
+                        }))
+                    } else {
+                        next(
+                            new UnprocessableEntityError({
+                                message: VALIDATION_FAILED,
+                                fails: errorMessages,
+                                originalError: errors,
+                            }),
+                        );
+                    }
+
                 } else {
                     req[this.validationType] = { ...instance };
                     next();
                 }
             });
         } catch (error) {
-            console.error(error);
             if (error instanceof Error) this.loggerService.error(error);
             next(
                 new UnprocessableEntityError({
