@@ -1,8 +1,8 @@
 <template>
     <div id="app">
         <nav>
-            <router-link to="/">User List</router-link>
-            <router-link to="/register">Register New User</router-link>
+            <router-link to="/">Users</router-link>
+            <router-link to="/register">Register</router-link>
         </nav>
         <router-view/>
     </div>
@@ -11,6 +11,9 @@
 <script>
 export default {
     name: 'App',
+    mounted() {
+        document.title = "ABZ Test Assignment";
+    }
 };
 </script>
 
