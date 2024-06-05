@@ -1,0 +1,14 @@
+---
+- name: "{{ REGISTRY_NAME }}{{ service_name }}"
+  tags: "{{ service_name }}"
+  community.docker.docker_image:
+    name: "{{ REGISTRY_NAME }}{{ service_name }}"
+    tag: "{{ service_version }}"
+    push: true
+    force_source: true
+    force_tag: true
+    build:
+      path: "{{ GIT_FOLDER }}/apps/abz_api"
+      dockerfile: "{{ GIT_FOLDER }}/apps/abz_api/Dockerfile"
+      nocache: false
+    source: build

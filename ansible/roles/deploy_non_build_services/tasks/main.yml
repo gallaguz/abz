@@ -1,0 +1,11 @@
+# code: language=ansible
+---
+- name: "Non build services Deploy"
+  include_tasks: "../services/{{ item.name }}/service.yml"
+  vars:
+    service_name: "{{ item.name }}"
+    image_name: "{{ item.image | default('') }}"
+    service_version: "{{ item.version }}"
+  loop: "{{ non_build_services }}"
+  loop_control:
+    loop_var: item

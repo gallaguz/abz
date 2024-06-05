@@ -1,0 +1,48 @@
+# code: language=ansible
+---
+volumes:
+  - "abz_postgres_prod"
+  - "abz_redis_prod"
+  - "abz_api_uploads_prod"
+  - "abz_certbot_etc"
+  - "abz_certbot_www"
+
+certbot:
+  - name: helloworld
+    image: crccheck/hello-world
+    version: latest
+  - name: http
+    image: nginx
+    version: 1.27.0
+  - name: certbot
+    image: certbot/certbot
+    version: latest
+  - name: https
+    image: nginx
+    version: 1.27.0
+
+services:
+  - name: "abz_converter"
+    version: "latest"
+  - name: "abz_seed"
+    version: "latest"
+  - name: "abz_api"
+    version: "latest"
+  - name: "abz_app"
+    version: "latest"
+
+non_build_services:
+  - name: "abz_redis"
+    image: "redis"
+    version: "7.2.5"
+  - name: "abz_postgres"
+    image: "postgres"
+    version: "15.6-alpine"
+  - name: "abz_nginx"
+    image: "nginx"
+    version: "1.27.0"
+  - name: "helper"
+    image: "ubuntu"
+    version: "22.04"
+
+

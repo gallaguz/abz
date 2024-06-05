@@ -1,0 +1,15 @@
+---
+- name: "Wait for {{ _service_name }} service to {{ CurrentState }}"
+  community.docker.docker_swarm_info:
+    tasks: true
+    nodes: true
+    nodes_filters:
+      name: "{{ _service_name }}"
+  register: docker_swarm_info
+  until: >
+    docker_swarm_info.tasks | selectattr('Image', 'equalto', _image_name + ':' + _service_version) | 
+    selectattr('CurrentState', 'equalto', CurrentState) | list | length > 0 and
+    docker_swarm_info.tasks | selectattr('Image', 'equalto', _image_name + ':' + _service_version) | 
+    selectattr('DesiredState', 'equalto', DesiredState) | list | length > 0
+  retries: 10
+  delay: 10

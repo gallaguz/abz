@@ -1,0 +1,53 @@
+---
+# abz_nginx
+- name: "[ {{ service_name }} ]: Deploying service"
+  tags: "{{ service_name }}"
+  block:
+    - name: "[ {{ service_name }} ]: Configuring config"
+      include_tasks: "../config.yaml"
+      loop:
+        - dhparam.pem
+        - http.conf
+        - https.conf
+        - nginx.conf
+      loop_control:
+        loop_var: config_item
+
+    - name: "[ {{ image_name }}:{{ service_version }} ]: Run service Deploy"
+      community.docker.docker_swarm_service:
+        name: "{{ service_name }}"
+        image: "{{ image_name }}:{{ service_version }}"
+        state: "present"
+        networks:
+          - name: "{{ NETWORK_NAME }}"
+        publish:
+          - mode: ingress
+            protocol: tcp
+            published_port: 80
+            target_port: 80
+          - mode: ingress
+            protocol: tcp
+            published_port: 443
+            target_port: 443
+        mounts:
+          - source: "abz_api_uploads_prod"
+            target: "/usr/src/app/public/uploads/"
+            type: volume
+          - source: "abz_certbot_etc"
+            target: "/etc/letsencrypt"
+            type: volume
+          - source: "abz_certbot_www"
+            target: "/var/www/certbot"
+            type: volume
+        configs:
+          - config_name: "{{ service_name }}-nginx.conf"
+            filename: "/etc/nginx/nginx.conf"
+          - config_name: "{{ service_name }}-http.conf"
+            filename: "/etc/nginx/conf.d/http.conf"
+          - config_name: "{{ service_name }}-https.conf"
+            filename: "/etc/nginx/conf.d/https.conf"
+          - config_name: "{{ service_name }}-dhparam.pem"
+            filename: "/etc/letsencrypt/dhparam.pem"
+        restart_config:
+          condition: on-failure
+          delay: 30s

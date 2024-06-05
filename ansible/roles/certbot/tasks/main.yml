@@ -1,0 +1,22 @@
+# code: language=ansible
+---
+- name: "Remove 'abz_nginx' service before obtaining cert"
+  include_tasks: "lib/remove_service.yml"
+  vars:
+    _service_name: "abz_nginx"
+
+- name: "Get ssl"
+  include_tasks: "../services/{{ item.name }}/service.yml"
+  vars:
+    service_name: "{{ item.name }}"
+    image_name: "{{ item.image | default('') }}"
+    service_version: "{{ item.version }}"
+  loop: "{{ certbot }}"
+  loop_control:
+    loop_var: item
+
+- name: "Remove services from 'certbot' list"
+  include_tasks: "lib/remove_service.yml"
+  vars:
+    _service_name: "{{ item.name }}"
+  loop: "{{ certbot }}"

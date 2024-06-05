@@ -1,0 +1,28 @@
+---
+- name: "[ {{ service_name }} ]: Deploying service"
+  tags: "{{ service_name }}"
+  block:
+    - name: "Configuring secret"
+      include_tasks: "../secret.yaml"
+      loop:
+        - .env
+      loop_control:
+        loop_var: secret_item
+
+    - name: "Run abz_seed container"
+      community.docker.docker_swarm_service:
+        name: "{{ service_name }}"
+        image: "{{ REGISTRY_NAME }}{{ service_name }}:{{ service_version }}"
+        state: present
+        command: /bin/sh -c "npm run migrate:deploy && npm run seed:deploy"
+        networks:
+          - name: "{{ NETWORK_NAME }}"
+        secrets:
+          - secret_name: "{{ service_name }}.env"
+            filename: "/usr/src/app/.env"
+        mounts:
+          - source: "abz_api_uploads_prod"
+            target: "/usr/src/app/public/uploads/"
+            type: volume
+        restart_config:
+          condition: none

@@ -1,0 +1,20 @@
+# code: language=ansible
+---
+- name: "[ {{ service_name }} ]: Run service Deploy"
+  community.docker.docker_swarm_service:
+    name: "{{ service_name }}"
+    image: "{{ image_name }}:{{ service_version }}"
+    state: present
+    networks:
+      - name: "{{ NETWORK_NAME }}"
+    restart_config:
+      condition: none
+
+#- name: "Wait for {{ service_name }} service to running"
+#  include_tasks: "lib/wait_for_service.yml"
+#  vars:
+#    _service_name: "{{ service_name }}"
+#    _image_name: "{{ image_name }}"
+#    _service_version: "{{ service_version }}"
+#    CurrentState: "running"
+#    DesiredState: "running"

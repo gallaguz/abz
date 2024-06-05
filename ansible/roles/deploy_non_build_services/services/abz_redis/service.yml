@@ -1,0 +1,22 @@
+---
+- name: "[ {{ service_name }} ]: Deploying service"
+  tags: "{{ service_name }}"
+  block:
+    - name: "Run {{ service_name }} container"
+      community.docker.docker_swarm_service:
+        name: "{{ service_name }}"
+        image: "{{ image_name }}:{{ service_version }}"
+        state: present
+        networks:
+          - name: "{{ NETWORK_NAME }}"
+        env:
+          ALLOW_EMPTY_PASSWORD: "yes"
+        publish:
+          - mode: ingress
+            protocol: tcp
+            published_port: "{{ REDIS_ENV_VARS.PORT }}"
+            target_port: 6379
+        mounts:
+          - source: "abz_postgres_prod"
+            target: "/data"
+            type: volume

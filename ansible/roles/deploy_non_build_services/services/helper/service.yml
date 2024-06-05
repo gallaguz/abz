@@ -1,0 +1,22 @@
+# code: language=ansible
+---
+- name: "[ {{ service_name }} ]: Deploying service"
+  tags: "{{ service_name }}"
+  block:
+    - name: Change ownership of volume
+      community.docker.docker_swarm_service:
+        name: "{{ service_name }}"
+        image: "{{ image_name }}:{{ service_version }}"
+        state: "present"
+        command: "chown -R {{ USER_ID }}:{{ GROUP_ID }} /usr/src/app/public/uploads"
+        user: "root"
+        groups:
+          - "{{ GROUP_ID }}"
+        mounts:
+          - source: "abz_api_uploads_prod"
+            target: "/usr/src/app/public/uploads/"
+            type: volume
+        networks:
+          - name: "{{ NETWORK_NAME }}"
+        restart_config:
+          condition: none

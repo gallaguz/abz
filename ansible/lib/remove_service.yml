@@ -1,0 +1,5 @@
+---
+- name: "Removing service {{ _service_name }}"
+  community.docker.docker_swarm_service:
+    name: "{{ _service_name }}"
+    state: absent

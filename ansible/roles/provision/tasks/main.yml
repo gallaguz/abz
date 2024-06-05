@@ -1,0 +1,46 @@
+# code: language=ansible
+---
+- name: "Provision"
+  tags: provision
+  block:
+    - name: Upgrade APT packages
+      tags: update
+      become: true
+      apt:
+        update_cache: true
+        upgrade: true
+
+    - name: Install additional packages
+      tags: packages
+      include_tasks:
+        file: "packages.yml"
+        apply:
+          tags: packages
+
+    - name: Install Docker
+      tags: docker
+      include_tasks:
+        file: "docker.yml"
+        apply:
+          tags: docker
+
+    - name: Create network
+      tags: network
+      include_tasks:
+        file: "network.yml"
+        apply:
+          tags: network
+
+    - name: Create volumes
+      tags: volumes
+      include_tasks:
+        file: "volumes.yml"
+        apply:
+          tags: volumes
+
+    - name: Run local Docker registry
+      tags: registry
+      include_tasks:
+        file: "registry.yml"
+        apply:
+          tags: registry

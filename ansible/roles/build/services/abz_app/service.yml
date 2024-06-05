@@ -1,0 +1,16 @@
+---
+- name: "{{ REGISTRY_NAME }}{{ service_name }}"
+  tags: "{{ service_name }}"
+  community.docker.docker_image:
+    name: "{{ REGISTRY_NAME }}{{ service_name }}"
+    tag: "{{ service_version }}"
+    push: true
+    force_source: true
+    force_tag: true
+    build:
+      path: "{{ GIT_FOLDER }}/apps/abz_app"
+      dockerfile: "{{ GIT_FOLDER }}/apps/abz_app/Dockerfile"
+      args:
+        VUE_APP_API_URL: "{{ VUE_APP_API_URL }}"
+      nocache: false
+    source: build

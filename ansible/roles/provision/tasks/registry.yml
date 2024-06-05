@@ -1,0 +1,29 @@
+# code: language=ansible
+---
+- name: Stop and remove previous Docker registry if it exists
+  community.docker.docker_container:
+    name: registry
+    state: absent
+  ignore_errors: true
+
+- name: Ensure Docker Registry is running
+  community.docker.docker_container:
+    name: registry
+    image: registry:2
+    state: started
+    ports:
+      - "5000:5000"
+    restart_policy: always
+    volumes:
+      - /mnt/registry:/var/lib/registry
+  register: start_registry
+
+- name: Test Docker Registry
+  uri:
+    url: http://localhost:5000/v2/
+    status_code: 200
+    return_content: true
+  register: test_docker_registry
+  until: test_docker_registry.content == '{}'
+  retries: 5
+  delay: 5

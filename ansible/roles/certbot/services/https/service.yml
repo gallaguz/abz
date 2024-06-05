@@ -1,0 +1,84 @@
+# code: language=ansible
+---
+- name: "Remove 'http' service before start 'https'"
+  include_tasks: "lib/remove_service.yml"
+  vars:
+    _service_name: "http"
+
+- name: "[ {{ service_name }} ]: Configuring config"
+  include_tasks: "../config.yaml"
+  loop:
+    - nginx.conf
+    - http.conf
+    - https.conf
+    - dhparam.pem
+  loop_control:
+    loop_var: config_item
+
+- name: "[ {{ service_name }} ]: Deploying service"
+  block:
+    - name: "[ {{ service_name }} ]: Run service Deploy"
+      community.docker.docker_swarm_service:
+        name: "{{ service_name }}"
+        image: "{{ image_name }}:{{ service_version }}"
+        state: "present"
+        networks:
+          - name: "{{ NETWORK_NAME }}"
+        publish:
+          - mode: ingress
+            protocol: tcp
+            published_port: 80
+            target_port: 80
+          - mode: ingress
+            protocol: tcp
+            published_port: 443
+            target_port: 443
+        mounts:
+          - source: "abz_certbot_etc"
+            target: "/etc/letsencrypt"
+            type: volume
+          - source: "abz_certbot_www"
+            target: "/var/www/certbot"
+            type: volume
+        configs:
+          - config_name: "{{ service_name }}-nginx.conf"
+            filename: "/etc/nginx/nginx.conf"
+          - config_name: "{{ service_name }}-http.conf"
+            filename: "/etc/nginx/conf.d/http.conf"
+          - config_name: "{{ service_name }}-https.conf"
+            filename: "/etc/nginx/conf.d/https.conf"
+          - config_name: "{{ service_name }}-dhparam.pem"
+            filename: "/etc/letsencrypt/dhparam.pem"
+  tags: "{{ service_name }}"
+
+
+
+#- name: "Wait for {{ service_name }} service to running"
+#  include_tasks: "lib/wait_for_service.yml"
+#  vars:
+#    _service_name: "{{ service_name }}"
+#    _image_name: "{{ image_name }}"
+#    _service_version: "{{ service_version }}"
+#    CurrentState: "running"
+#    DesiredState: "running"
+
+- name: "Ensure the response from https://{{ DOMAIN_NAME }}/ is 200 and contains 'Hello World'"
+  block:
+    - name: "Make a GET request to https://{{ DOMAIN_NAME }}/"
+      uri:
+        url: "https://{{ DOMAIN_NAME }}/"
+        method: GET
+        return_content: true
+        validate_certs: false
+      register: result
+      until: result.status == 200 and 'Hello World' in result.content
+      retries: 10
+      delay: 10
+      failed_when: result.status != 200 or 'Hello World' not in result.content
+      ignore_errors: yes
+    - name: Check if the task succeeded
+      assert:
+        that:
+          - "result.status == 200"
+          - "'Hello World' in result.content"
+        fail_msg: "The site https://{{ DOMAIN_NAME }}/ is not returning the expected response after 10 retries"

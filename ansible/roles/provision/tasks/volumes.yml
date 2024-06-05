@@ -1,0 +1,6 @@
+# code: language=ansible
+---
+- name: Create Docker volumes
+  community.docker.docker_volume:
+    name: "{{ item }}"
+  loop: "{{ volumes }}"

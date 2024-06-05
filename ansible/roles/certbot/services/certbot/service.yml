@@ -1,0 +1,36 @@
+---
+- name: "Deploy {{ service_name }} service"
+  community.docker.docker_swarm_service:
+    name: "{{ service_name }}"
+    image: "{{ image_name }}:{{ service_version }}"
+    state: present
+    command: >
+      {% if certbot_production %}
+      certbot certonly -v --debug --webroot -w /var/www/certbot --email {{ EMAIL }} -d {{ DOMAIN_NAME }} --agree-tos --no-eff-email
+      {% else %}
+      certbot certonly -v --debug --webroot -w /var/www/certbot --email {{ EMAIL }} -d {{ DOMAIN_NAME }} --agree-tos --no-eff-email --test-cert --staging
+      {% endif %}
+      {% if certbot_force_renewal %}
+      --force-renewal
+      {% endif %}
+    mounts:
+      - source: "abz_certbot_etc"
+        target: "/etc/letsencrypt"
+        type: volume
+      - source: "abz_certbot_www"
+        target: "/var/www/certbot"
+        type: volume
+    networks:
+      - name: "{{ NETWORK_NAME }}"
+    restart_config:
+      condition: none
+  register: deploy_result
+
+- name: "Wait for {{ service_name }} service to complete"
+  include_tasks: "lib/wait_for_service.yml"
+  vars:
+    _service_name: "{{ service_name }}"
+    _image_name: "{{ image_name }}"
+    _service_version: "{{ service_version }}"
+    CurrentState: "complete"
+    DesiredState: "shutdown"

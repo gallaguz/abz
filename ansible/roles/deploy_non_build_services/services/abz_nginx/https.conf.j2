@@ -1,0 +1,32 @@
+# https.conf
+
+server {
+    listen 443 ssl;
+    server_name {{ DOMAIN_NAME }};
+
+    ssl_certificate /etc/letsencrypt/live/{{ DOMAIN_NAME }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ DOMAIN_NAME }}/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+    ssl_dhparam /etc/letsencrypt/dhparam.pem;
+
+    location /api {
+        proxy_pass http://abz_api;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /images/users {
+        alias /usr/src/app/public/uploads;
+    }
+
+    location / {
+        proxy_pass http://abz_app;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}

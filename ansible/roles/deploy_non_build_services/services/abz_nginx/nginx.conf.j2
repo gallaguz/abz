@@ -1,0 +1,25 @@
+# nginx.conf
+
+worker_processes 1;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    sendfile on;
+    client_max_body_size 5M;
+
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    include /etc/nginx/conf.d/*.conf;
+
+    upstream abz_api {
+        server abz_api:8000;
+    }
+
+    upstream abz_app {
+        server abz_app:8080;
+    }
+}

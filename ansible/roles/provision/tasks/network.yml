@@ -1,0 +1,6 @@
+# code: language=ansible
+---
+- name: Create Network
+  community.docker.docker_network:
+    name: "{{ NETWORK_NAME }}"
+    driver: overlay

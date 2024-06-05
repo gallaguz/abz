@@ -1,0 +1,23 @@
+---
+- name: "Install additional packages"
+  become: true
+  apt:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+      - python3-pip
+      - python3
+      - sshpass
+    update_cache: true
+    cache_valid_time: 86400
+
+- name: "Setting up additional python packages"
+  block:
+    - name: "PIP packages install"
+      pip:
+        name:
+          - docker
+          - requests
+          - urllib3

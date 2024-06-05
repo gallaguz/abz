@@ -1,0 +1,17 @@
+# code: language=ansible
+---
+- name: GCP
+  hosts: gcp
+  roles:
+    - role: provision
+      tags: provision
+    - role: swarm_init
+      tags: swarm_init
+    - role: certbot
+      tags: certbot
+    - role: build
+      tags: build
+    - role: deploy_non_build_services
+      tags: deploy_non_build_services
+    - role: deploy
+      tags: deploy
