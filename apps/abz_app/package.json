@@ -1,7 +1,8 @@
 {
-  "name": "app2",
-  "version": "0.1.0",
-  "private": true,
+  "name": "abz_app",
+  "version": "0.0.1",
+  "description": "Node.js Developer Test Assignment",
+  "author": "Andrii Hallahuz",
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
