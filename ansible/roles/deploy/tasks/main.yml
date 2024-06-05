@@ -1,12 +1,14 @@
 # code: language=ansible
 ---
 - name: "Services Deploy"
+  tags: deploy
   include_tasks: "../services/{{ item.name }}/service.yml"
   vars:
     service_name: "{{ item.name }}"
     image_name: "{{ item.image | default('') }}"
     service_version: "{{ item.version }}"
   loop: "{{ services }}"
+  when: "'deploy' in ansible_run_tags or item.name in ansible_run_tags"
   loop_control:
     loop_var: item
 

@@ -1,20 +1,24 @@
 # code: language=ansible
 ---
-- name: "Clone the `abz` repository"
-  ansible.builtin.git:
-    repo: "{{ REPOSITORY.URL }}"
-    version: "{{ REPOSITORY.BRANCH }}"
-    dest: "{{ GIT_FOLDER }}"
-    force: true
+- name: "Build"
+  tags: build
+  block:
+    - name: "Clone the `abz` repository"
+      ansible.builtin.git:
+        repo: "{{ REPOSITORY.URL }}"
+        version: "{{ REPOSITORY.BRANCH }}"
+        dest: "{{ GIT_FOLDER }}"
+        force: true
 
-- name: "Tag, build and push to local docker hub"
-  include_tasks: "../services/{{ item.name }}/service.yml"
-  vars:
-    service_name: "{{ item.name }}"
-    service_version: "{{ item.version }}"
-  loop: "{{ services | difference(non_build_services) }}"
+    - name: "Tag, build and push to local docker hub"
+      include_tasks: "../services/{{ item.name }}/service.yml"
+      vars:
+        service_name: "{{ item.name }}"
+        service_version: "{{ item.version }}"
+      loop: "{{ services | difference(non_build_services) }}"
+      when: "'build' in ansible_run_tags or item.name in ansible_run_tags"
 
-- name: "Delete cloned repository"
-  ansible.builtin.file:
-    state: absent
-    path: "{{ GIT_FOLDER }}"
+    - name: "Delete cloned repository"
+      ansible.builtin.file:
+        state: absent
+        path: "{{ GIT_FOLDER }}"
