@@ -11,7 +11,8 @@ import {
     WRONG_PHONE,
     WRONG_PHOTO_SIZE,
     WRONG_POSITION_ID,
- ENV_VARS } from '../../constants';
+    ENV_VARS, SHORT_EMAIL, LONG_EMAIL,
+} from '../../constants';
 
 const validCountries = ['UA'];
 
@@ -46,6 +47,8 @@ export namespace UsersRegister {
         @IsString({ message: WRONG_NAME })
         name: string;
 
+        @MinLength(6, { message: SHORT_EMAIL })
+        @MaxLength(100, { message: LONG_EMAIL })
         @IsEmail({}, { message: WRONG_EMAIL })
         email: string;
 
