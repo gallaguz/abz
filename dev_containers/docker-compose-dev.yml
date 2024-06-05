@@ -1,0 +1,126 @@
+version: '2.4'
+
+services:
+    abz_api:
+        container_name: abz_api
+        build:
+            context: ../apps/abz_api
+            dockerfile: Dockerfile.dev
+        restart: always
+        command: npm run dev
+        env_file:
+            - .env.postgres.dev
+            - .env.redis.dev
+            - .env.converter.dev
+            - .env.api.dev
+        depends_on:
+            abz_postgres:
+                condition: service_healthy
+        volumes:
+            - ../apps/abz_api/src:/usr/src/app/src
+            - abz_api_uploads_dev:/usr/src/app/public/uploads/:rw
+        networks:
+            - abz_network
+
+    abz_seed:
+        container_name: abz_seed
+        build:
+            context: ../apps/abz_api
+            dockerfile: Dockerfile.seed
+        command: /bin/sh -c "npm run migrate:dev && npm run seed:dev"
+        depends_on:
+            abz_postgres:
+                condition: service_healthy
+        volumes:
+            - abz_api_uploads_dev:/usr/src/app/public/uploads/:rw
+        env_file:
+            - .env.postgres.dev
+            - .env.redis.dev
+            - .env.converter.dev
+            - .env.api.dev
+        networks:
+            - abz_network
+
+    abz_app:
+        container_name: abz_app
+        build:
+            context: ../apps/abz_app
+            dockerfile: Dockerfile.dev
+        restart: always
+        command: npm run dev
+        env_file:
+            - .env.app.dev
+        volumes:
+            - ../apps/abz_app/src:/usr/src/app/src
+        networks:
+            - abz_network
+
+    abz_converter:
+        container_name: abz_converter
+        build:
+            context: ../apps/abz_converter
+            dockerfile: Dockerfile.dev
+        restart: always
+        command: npm run start:dev
+        env_file:
+            - .env.converter.dev
+        volumes:
+            - ../apps/abz_converter/src:/usr/src/app/src
+        networks:
+            - abz_network
+
+    abz_redis:
+        restart: always
+        container_name: abz_redis
+        image: bitnami/redis:7.2.4
+        environment:
+            - ALLOW_EMPTY_PASSWORD=yes
+        ports:
+            - ${REDIS_PORT}:6379
+        networks:
+            - abz_network
+        volumes:
+            - abz_redis_dev:/data
+
+    abz_postgres:
+        image: postgres:15.6-alpine
+        container_name: abz_postgres
+        restart: always
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB}
+        ports:
+            - ${POSTGRES_PORT}:5432/tcp
+        volumes:
+            - abz_postgres_dev:/var/lib/postgresql
+        networks:
+            - abz_network
+        healthcheck:
+            test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    nginx:
+        image: nginx:latest
+        container_name: nginx
+        restart: always
+        ports:
+            - '80:80'
+        volumes:
+            - ./nginx.conf.dev:/etc/nginx/nginx.conf
+            - abz_api_uploads_dev:/usr/src/app/public/uploads:ro
+        depends_on:
+            - abz_api
+            - abz_app
+        networks:
+            - abz_network
+
+networks:
+    abz_network:
+
+volumes:
+    abz_postgres_dev:
+    abz_redis_dev:
+    abz_api_uploads_dev:

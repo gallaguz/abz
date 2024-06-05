@@ -1,0 +1,118 @@
+version: '3'
+
+services:
+    abz_api:
+        user: "${USER_ID}:${GROUP_ID}"
+        container_name: abz_api
+        image: localhost:5000/abz_api:latest
+        env_file:
+            - .env
+        restart: always
+        depends_on:
+            abz_postgres:
+                condition: service_healthy
+            change-vol-ownership:
+                condition: service_completed_successfully
+        volumes:
+            - abz_api_uploads_prod:/usr/src/app/public/uploads/:z
+        networks:
+            - abz_network
+
+    abz_seed:
+        user: "${USER_ID}:${GROUP_ID}"
+        container_name: abz_seed
+        image: localhost:5000/abz_seed:latest
+        env_file:
+            - .env
+        command: /bin/sh -c "npm run migrate:deploy && npm run seed:deploy"
+        depends_on:
+            abz_postgres:
+                condition: service_healthy
+            change-vol-ownership:
+                condition: service_completed_successfully
+        volumes:
+            - abz_api_uploads_prod:/usr/src/app/public/uploads/:z
+        networks:
+            - abz_network
+
+    abz_app:
+        container_name: abz_app
+        image: localhost:5000/abz_app:latest
+        restart: always
+        volumes:
+            - ./app.nginx.conf:/etc/nginx/nginx.conf
+        networks:
+            - abz_network
+
+    abz_converter:
+        user: ${USER_ID}:${GROUP_ID}
+        container_name: abz_converter
+        image: localhost:5000/abz_converter:latest
+        restart: always
+        env_file:
+            - .env
+        networks:
+            - abz_network
+
+    abz_redis:
+        restart: always
+        container_name: abz_redis
+        image: bitnami/redis:7.2.4
+        environment:
+            - ALLOW_EMPTY_PASSWORD=yes
+        ports:
+            - ${REDIS_PORT}:6379
+        networks:
+            - abz_network
+        volumes:
+            - abz_redis_prod:/data
+
+    abz_postgres:
+        image: postgres:15.6-alpine
+        container_name: abz_postgres
+        restart: always
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB}
+        ports:
+            - ${POSTGRES_PORT}:5432/tcp
+        volumes:
+            - abz_postgres_prod:/var/lib/postgresql
+        networks:
+            - abz_network
+        healthcheck:
+            test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    abz_nginx:
+        image: nginx:latest
+        container_name: abz_nginx
+        restart: always
+        ports:
+            - '80:80'
+        volumes:
+            - ./nginx.conf:/etc/nginx/nginx.conf
+            - abz_api_uploads_prod:/usr/src/app/public/uploads/:z
+        depends_on:
+            change-vol-ownership:
+                condition: service_completed_successfully
+        networks:
+            - abz_network
+
+    change-vol-ownership:
+        image: ubuntu:22.04
+        user: "root"
+        volumes:
+            - abz_api_uploads_prod:/usr/src/app/public/uploads:z
+        command: chown -R ${USER_ID}:${GROUP_ID} /usr/src/app/public/uploads
+
+networks:
+    abz_network:
+
+volumes:
+    abz_postgres_prod:
+    abz_redis_prod:
+    abz_api_uploads_prod:
