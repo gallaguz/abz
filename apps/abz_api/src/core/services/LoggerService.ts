@@ -34,7 +34,7 @@ export class LoggerService implements ILogger {
     private readonly _instance: winston.Logger;
     constructor() {
         this._instance = winston.createLogger({
-            // level: process.env[ENV_VARS.API_LOG_LEVEL] || API_LOG_LEVELS_MAP[API_LOG_LEVELS.ERROR],
+            level: process.env[ENV_VARS.API_LOG_LEVEL] || API_LOG_LEVELS_MAP[API_LOG_LEVELS.ERROR],
             levels: API_LOG_LEVELS,
             format,
             transports,
