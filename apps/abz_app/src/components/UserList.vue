@@ -13,9 +13,9 @@
         </div>
         <div class="user-info">
           <p><strong>Name:</strong> {{ user.name }}</p>
-          <p><strong>Email:</strong> {{ user.email }}</p>
-          <p><strong>Phone:</strong> {{ user.phone }}</p>
-          <p><strong>Position:</strong> {{ user.position }}</p>
+<!--          <p><strong>Email:</strong> {{ user.email }}</p>-->
+<!--          <p><strong>Phone:</strong> {{ user.phone }}</p>-->
+<!--          <p><strong>Position:</strong> {{ user.position }}</p>-->
           <router-link :to="{ name: 'UserDetail', params: { id: user.id } }">Details</router-link>
         </div>
       </div>
