@@ -16,7 +16,7 @@
         service_name: "{{ item.name }}"
         service_version: "{{ item.version }}"
       loop: "{{ services | difference(non_build_services) }}"
-      when: "'build' in ansible_run_tags or item.name in ansible_run_tags"
+#      when: "'build' in ansible_run_tags or item.name in ansible_run_tags"
 
     - name: "Delete cloned repository"
       ansible.builtin.file:

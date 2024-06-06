@@ -8,7 +8,7 @@
     image_name: "{{ item.image | default('') }}"
     service_version: "{{ item.version }}"
   loop: "{{ services }}"
-  when: "'deploy' in ansible_run_tags or item.name in ansible_run_tags"
+#  when: "'deploy' in ansible_run_tags or item.name in ansible_run_tags"
   loop_control:
     loop_var: item
 
