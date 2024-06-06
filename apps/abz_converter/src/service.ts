@@ -16,17 +16,17 @@ export class ImageService {
     try {
       const defaults = this.getDefaults();
 
-      const { metadata, container } = await this.parseImage(
+      const { container } = await this.parseImage(
         Buffer.from(image, 'base64'),
         defaults,
       );
 
       return container
-        .extract({
-          left: Math.round((metadata.width - defaults.width) / 2),
-          top: Math.round((metadata.height - defaults.height) / 2),
+        .resize({
           width: Math.round(defaults.width),
           height: Math.round(defaults.height),
+          fit: 'cover',
+          position: 'centre',
         })
         .jpeg({ quality: defaults.quality })
         .toBuffer();
