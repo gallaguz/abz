@@ -1,6 +1,6 @@
 <template>
   <div class="user-list">
-    <h2>User List</h2>
+    <h2>Users List</h2>
     <div class="pagination-controls">
       <button @click="loadPreviousPage" :disabled="!prevUrl">Previous Page</button>
       <button @click="loadNextPage" :disabled="!nextUrl">Next Page</button>
